@@ -3,27 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhatsDown.Api", "WhatsDown\WhatsDown.Api.csproj", "{096CF55E-A1CD-44FB-9119-34A5F47381B4}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WhatsDown Logics", "WhatsDown Logics", "{AA46D9AB-C319-4536-8386-CEE42D9CA539}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WhatsDown Models", "WhatsDown Models", "{291F46E6-5E7A-42EA-9E90-8F06A4BB6F00}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WhatsDown Presentations", "WhatsDown Presentations", "{5E7C55DC-2A8A-4E4E-B664-2BA421C8B006}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WhatsDown Extentions", "WhatsDown Extentions", "{52E3AC11-B7DB-4BB0-A675-DD1DA6D9DD5E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhatsDown.Models", "WhatsDown.Models\WhatsDown.Models.csproj", "{0325033C-6D9B-476C-8CA7-BA90FD3172A6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhatsDown.Extentions", "WhatsDown.Extentions\WhatsDown.Extentions.csproj", "{80C00795-FE6C-4128-A770-09FC32A5322B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhatsDown.WebClient", "WhatsDown.WebClient\WhatsDown.WebClient.csproj", "{4417CA1E-A296-4B57-942B-BA31FED3DBCA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhatsDown.WindowsFormClient", "WhatsDown.WindowsFormClient\WhatsDown.WindowsFormClient.csproj", "{ABDEB9DC-794A-4047-A905-F85C9441BBA4}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WhatsDown Test", "WhatsDown Test", "{5551C0EE-664D-4B27-A90B-9BF9ACF3C258}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhatsDown.Test", "WhatsDown.Test\WhatsDown.Test.csproj", "{B000F81D-C68F-4D6E-9797-BAE6BF71CFA9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhatsDown", "WhatsDown\WhatsDown.csproj", "{46131574-9261-4DEA-A21D-9BCD9F777B24}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,40 +11,12 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{096CF55E-A1CD-44FB-9119-34A5F47381B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{096CF55E-A1CD-44FB-9119-34A5F47381B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{096CF55E-A1CD-44FB-9119-34A5F47381B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{096CF55E-A1CD-44FB-9119-34A5F47381B4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0325033C-6D9B-476C-8CA7-BA90FD3172A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0325033C-6D9B-476C-8CA7-BA90FD3172A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0325033C-6D9B-476C-8CA7-BA90FD3172A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0325033C-6D9B-476C-8CA7-BA90FD3172A6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{80C00795-FE6C-4128-A770-09FC32A5322B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{80C00795-FE6C-4128-A770-09FC32A5322B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{80C00795-FE6C-4128-A770-09FC32A5322B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{80C00795-FE6C-4128-A770-09FC32A5322B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4417CA1E-A296-4B57-942B-BA31FED3DBCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4417CA1E-A296-4B57-942B-BA31FED3DBCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4417CA1E-A296-4B57-942B-BA31FED3DBCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4417CA1E-A296-4B57-942B-BA31FED3DBCA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ABDEB9DC-794A-4047-A905-F85C9441BBA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ABDEB9DC-794A-4047-A905-F85C9441BBA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ABDEB9DC-794A-4047-A905-F85C9441BBA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ABDEB9DC-794A-4047-A905-F85C9441BBA4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B000F81D-C68F-4D6E-9797-BAE6BF71CFA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B000F81D-C68F-4D6E-9797-BAE6BF71CFA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B000F81D-C68F-4D6E-9797-BAE6BF71CFA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B000F81D-C68F-4D6E-9797-BAE6BF71CFA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46131574-9261-4DEA-A21D-9BCD9F777B24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46131574-9261-4DEA-A21D-9BCD9F777B24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46131574-9261-4DEA-A21D-9BCD9F777B24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46131574-9261-4DEA-A21D-9BCD9F777B24}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{096CF55E-A1CD-44FB-9119-34A5F47381B4} = {AA46D9AB-C319-4536-8386-CEE42D9CA539}
-		{0325033C-6D9B-476C-8CA7-BA90FD3172A6} = {291F46E6-5E7A-42EA-9E90-8F06A4BB6F00}
-		{80C00795-FE6C-4128-A770-09FC32A5322B} = {52E3AC11-B7DB-4BB0-A675-DD1DA6D9DD5E}
-		{4417CA1E-A296-4B57-942B-BA31FED3DBCA} = {5E7C55DC-2A8A-4E4E-B664-2BA421C8B006}
-		{ABDEB9DC-794A-4047-A905-F85C9441BBA4} = {5E7C55DC-2A8A-4E4E-B664-2BA421C8B006}
-		{B000F81D-C68F-4D6E-9797-BAE6BF71CFA9} = {5551C0EE-664D-4B27-A90B-9BF9ACF3C258}
 	EndGlobalSection
 EndGlobal
