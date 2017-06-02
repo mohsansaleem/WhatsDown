@@ -8,5 +8,6 @@ namespace WhatsDown.Models.Entity
 {
     class User : IdentityUser
     {
+
     }
 }
