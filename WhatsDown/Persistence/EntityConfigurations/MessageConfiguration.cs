@@ -1,4 +1,5 @@
-﻿using System.Data.Entity.ModelConfiguration;
+﻿using System.Data.Entity.Migrations.Sql;
+using System.Data.Entity.ModelConfiguration;
 using WhatsDown.Core.Domain;
 
 namespace WhatsDown.Persistence.EntityConfigurations
@@ -7,30 +8,22 @@ namespace WhatsDown.Persistence.EntityConfigurations
     {
         public MessageConfiguration()
         {
-            //Property(c => c.Description)
+            //Property(msg => msg.MessageBody)
             //    .IsRequired()
-            //    .HasMaxLength(2000);
+            //    .HasMaxLength(200);
 
-            //Property(c => c.Name)
-            //    .IsRequired()
-            //    .HasMaxLength(255);
-
-            //HasRequired(c => c.Author)
-            //    .WithMany(a => a.Courses)
+            //HasRequired(msg => msg.SenderId)
+            //    .WithMany(usr => usr.)
             //    .HasForeignKey(c => c.AuthorId)
             //    .WillCascadeOnDelete(false);
 
-            //HasRequired(c => c.Cover)
-            //    .WithRequiredPrincipal(c => c.Course);
+            //Property(msg => msg.MessageBody)
+            //    .IsRequired()
+            //    .HasMaxLength(200);
 
-            //HasMany(c => c.Tags)
-            //    .WithMany(t => t.Courses)
-            //    .Map(m =>
-            //    {
-            //        m.ToTable("CourseTags");
-            //        m.MapLeftKey("CourseId");
-            //        m.MapRightKey("TagId");
-            //    });
+            //Property(msg => msg.MessageBody)
+            //    .IsRequired()
+            //    .HasMaxLength(200);
         }
     }
 }

@@ -209,7 +209,9 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Core\Domain\Course.cs" />
+    <Compile Include="Core\Domain\Conversation.cs" />
+    <Compile Include="Core\Domain\ConversationUser.cs" />
+    <Compile Include="Core\Domain\Message.cs" />
     <Compile Include="Core\Domain\User.cs" />
     <Compile Include="Core\IUnitOfWork.cs" />
     <Compile Include="Core\Repositories\IMessageRepository.cs" />
