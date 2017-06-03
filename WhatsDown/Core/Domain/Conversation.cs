@@ -15,18 +15,21 @@ namespace WhatsDown.Core.Domain
         }
 
         [Key]
-        public int CId
+        public int Id
         {
             get; set;
         }
+
         public System.DateTime StartDate
         {
             get; set;
         }
+
         public string Title
         {
             get; set;
         }
+
         public string Description
         {
             get; set;

@@ -16,10 +16,24 @@ namespace WhatsDown.Persistence
         {
             return new WhatsDownDBContext();
         }
-        
-        public virtual DbSet<Message> Messages { get; set; }
-        public virtual DbSet<Conversation> Conversations { get; set; }
-        public virtual DbSet<UserConversation> UserConversations { get; set; }
+
+        public virtual DbSet<Message> Messages
+        {
+            get; set;
+        }
+        public virtual DbSet<Conversation> Conversations
+        {
+            get; set;
+        }
+        public virtual DbSet<UserConversation> UserConversations
+        {
+            get; set;
+        }
+
+        public virtual DbSet<Test> Tests
+        {
+            get; set;
+        }
 
         //protected override void OnModelCreating(DbModelBuilder modelBuilder)
         //{

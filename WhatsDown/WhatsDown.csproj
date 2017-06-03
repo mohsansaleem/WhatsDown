@@ -212,6 +212,7 @@
     <Compile Include="Core\Domain\Conversation.cs" />
     <Compile Include="Core\Domain\ConversationUser.cs" />
     <Compile Include="Core\Domain\Message.cs" />
+    <Compile Include="Core\Domain\Test.cs" />
     <Compile Include="Core\Domain\User.cs" />
     <Compile Include="Core\IUnitOfWork.cs" />
     <Compile Include="Core\Repositories\IMessageRepository.cs" />
@@ -220,6 +221,19 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706031902208_InitialCreate.cs" />
+    <Compile Include="Migrations\201706031902208_InitialCreate.Designer.cs">
+      <DependentUpon>201706031902208_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706031907544_Tmp.cs" />
+    <Compile Include="Migrations\201706031907544_Tmp.Designer.cs">
+      <DependentUpon>201706031907544_Tmp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706031909361_AddingTablesWithId.cs" />
+    <Compile Include="Migrations\201706031909361_AddingTablesWithId.Designer.cs">
+      <DependentUpon>201706031909361_AddingTablesWithId.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -307,6 +321,17 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201706031902208_InitialCreate.resx">
+      <DependentUpon>201706031902208_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706031907544_Tmp.resx">
+      <DependentUpon>201706031907544_Tmp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706031909361_AddingTablesWithId.resx">
+      <DependentUpon>201706031909361_AddingTablesWithId.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

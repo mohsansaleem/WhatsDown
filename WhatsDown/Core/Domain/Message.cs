@@ -7,7 +7,7 @@ namespace WhatsDown.Core.Domain
     public class Message
     {
         [Key]
-        public int MId
+        public int Id
         {
             get; set;
         }

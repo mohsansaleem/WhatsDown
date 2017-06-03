@@ -9,7 +9,7 @@ namespace WhatsDown.Core.Domain
     public class UserConversation
     {
         [Key]
-        public int CUId
+        public int Id
         {
             get; set;
         }

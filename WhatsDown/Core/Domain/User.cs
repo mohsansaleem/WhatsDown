@@ -11,12 +11,16 @@ namespace WhatsDown.Core.Domain
 {
     public class User : IdentityUser
     {
-        //public System.DateTime LastSeen { get; set; }
+        public System.DateTime LastSeen
+        {
+            get; set;
+        }
 
         public User()
         {
             this.ConversationUsers = new HashSet<UserConversation>();
             this.Messages = new HashSet<Message>();
+            LastSeen = DateTime.Now;
         }
 
         public virtual ICollection<UserConversation> ConversationUsers
