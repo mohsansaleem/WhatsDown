@@ -11,17 +11,18 @@ namespace WhatsDown.Persistence
         {
             //this.Configuration.LazyLoadingEnabled = false;
         }
+
         public static WhatsDownDBContext Create()
         {
             return new WhatsDownDBContext();
         }
         
-        public virtual DbSet<Message> Messages { get; set; }
+        //public virtual DbSet<Message> Messages { get; set; }
         
 
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Configurations.Add(new MessageConfiguration());
-        }
+        //protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Configurations.Add(new MessageConfiguration());
+        //}
     }
 }
