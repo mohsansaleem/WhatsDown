@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNet.SignalR;
+using WhatsDown.Persistence;
 
 namespace WhatsDown.Hubs
 {
@@ -15,6 +16,8 @@ namespace WhatsDown.Hubs
             var hubContext = GlobalHost.ConnectionManager.GetHubContext<MainHub>();
             hubContext.Clients.All.foo(msg);
 
+           
+
             // var hubContext = GlobalHost.ConnectionManager.GetHubContext<AdminHub>();
             // hubContext.Clients.All.foo(msg);
         }
@@ -24,6 +27,9 @@ namespace WhatsDown.Hubs
         public void Send(string name, string message)
         {
             Clients.All.broadcastMessage(name, message);
+
+            var dbContext = new WhatsDownDBContext();
+            
         }
 
         public void SendToSpecific(string name, string message, string to)

@@ -10,7 +10,6 @@ namespace WhatsDown.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
-            ContextKey = "WhatsDown.Persistence.WhatsDownDBContext";
         }
 
         protected override void Seed(WhatsDown.Persistence.WhatsDownDBContext context)

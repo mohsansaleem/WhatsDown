@@ -25,7 +25,7 @@ namespace WhatsDown.Persistence
         {
             get; set;
         }
-        public virtual DbSet<UserConversation> UserConversations
+        public virtual DbSet<UserConversationStatus> UserConversations
         {
             get; set;
         }

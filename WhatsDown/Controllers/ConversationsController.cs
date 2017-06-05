@@ -13,12 +13,12 @@ namespace WhatsDown.Controllers
 {
     public class ConversationsController : Controller
     {
-        private WhatsDownDBContext db = new WhatsDownDBContext();
+        private UnitOfWork db = new UnitOfWork(new WhatsDownDBContext());
 
         // GET: Conversations
         public ActionResult Index()
         {
-            return View(db.Conversations.ToList());
+            return View(db.Conversations.GetAll().ToList());
         }
 
         // GET: Conversations/Details/5
@@ -28,7 +28,7 @@ namespace WhatsDown.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Conversation conversation = db.Conversations.Find(id);
+            Conversation conversation = db.Conversations.Find( conv => conv.Id == id).FirstOrDefault();
             if (conversation == null)
             {
                 return HttpNotFound();
@@ -52,7 +52,7 @@ namespace WhatsDown.Controllers
             if (ModelState.IsValid)
             {
                 db.Conversations.Add(conversation);
-                db.SaveChanges();
+                
                 return RedirectToAction("Index");
             }
 
@@ -66,7 +66,7 @@ namespace WhatsDown.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Conversation conversation = db.Conversations.Find(id);
+            Conversation conversation = db.Conversations.Find(conv => conv.Id==id).FirstOrDefault();
             if (conversation == null)
             {
                 return HttpNotFound();
@@ -83,8 +83,8 @@ namespace WhatsDown.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(conversation).State = EntityState.Modified;
-                db.SaveChanges();
+                //db.Entry(conversation).State = EntityState.Modified;
+                //db.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(conversation);
@@ -97,7 +97,8 @@ namespace WhatsDown.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Conversation conversation = db.Conversations.Find(id);
+            Conversation conversation = db.Conversations.Find(cnv => cnv.Id == id).FirstOrDefault();
+            
             if (conversation == null)
             {
                 return HttpNotFound();
@@ -110,9 +111,9 @@ namespace WhatsDown.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Conversation conversation = db.Conversations.Find(id);
+            Conversation conversation = db.Conversations.Find(cnv => cnv.Id==id).FirstOrDefault();
             db.Conversations.Remove(conversation);
-            db.SaveChanges();
+            //db.SaveChanges();
             return RedirectToAction("Index");
         }
 

@@ -15,6 +15,8 @@ namespace WhatsDown.Core.Domain
 
         public string LastName { get; set; }
 
+        public string Quote { get; set; }
+
         public System.DateTime LastSeen
         {
             get; set;
@@ -22,12 +24,17 @@ namespace WhatsDown.Core.Domain
 
         public User()
         {
-            this.ConversationUsers = new HashSet<UserConversation>();
+            this.ConversationUsers = new HashSet<UserConversationStatus>();
             this.Messages = new HashSet<Message>();
             LastSeen = DateTime.Now;
         }
 
-        public virtual ICollection<UserConversation> ConversationUsers
+        public virtual ICollection<Conversation> ConversationsHosting
+        {
+            get; set;
+        }
+
+        public virtual ICollection<UserConversationStatus> ConversationUsers
         {
             get; set;
         }

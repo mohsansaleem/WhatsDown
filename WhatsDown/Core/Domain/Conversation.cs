@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 using System.Web;
 
@@ -10,7 +11,8 @@ namespace WhatsDown.Core.Domain
     {
         public Conversation()
         {
-            this.ConversationUsers = new HashSet<UserConversation>();
+            StartDate = DateTime.Now;
+            this.ConversationUsers = new HashSet<UserConversationStatus>();
             this.Messages = new HashSet<Message>();
         }
 
@@ -19,7 +21,7 @@ namespace WhatsDown.Core.Domain
         {
             get; set;
         }
-
+        
         public System.DateTime StartDate
         {
             get; set;
@@ -35,7 +37,11 @@ namespace WhatsDown.Core.Domain
             get; set;
         }
 
-        public virtual ICollection<UserConversation> ConversationUsers
+        public string AdminId { get; set; }
+
+        public virtual User Admin { get; set; }
+
+        public virtual ICollection<UserConversationStatus> ConversationUsers
         {
             get; set;
         }

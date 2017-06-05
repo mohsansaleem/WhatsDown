@@ -11,12 +11,12 @@ namespace WhatsDown.Persistence.Repositories
         {
         }
 
-        public User GetAuthorWithCourses(int id)
+        public User GetSenderFromMessage(int messageId)
         {
-            return null;//PlutoContext.Users.Include(a => a.c).SingleOrDefault(a => a.Id == id);
+            return null;//WhatsDownDbContext.Users.Include(a => a.c).SingleOrDefault(a => a.Id == id);
         }
 
-        public WhatsDownDBContext PlutoContext
+        public WhatsDownDBContext WhatsDownDbContext
         {
             get { return Context as WhatsDownDBContext; }
         }

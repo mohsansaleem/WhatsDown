@@ -5,7 +5,10 @@ namespace WhatsDown.Core.Repositories
 {
     public interface IMessageRepository : IRepository<Message>
     {
-        IEnumerable<Message> GetTopSellingCourses(int count);
-        IEnumerable<Message> GetCoursesWithAuthors(int pageIndex, int pageSize);
+        IEnumerable<Message> GetAllMessagesForConversation(int conversationId);
+
+        IEnumerable<Message> GetTopMessagesForConversation(int conversationId, int count);
+
+        IEnumerable<Message> GetConversationMessagesPerPageForUser( int conversationId, int pageIndex, int pageSize);
     }
 }

@@ -4,6 +4,6 @@ namespace WhatsDown.Core.Repositories
 {
     public interface IUserRepository : IRepository<User>
     {
-        User GetAuthorWithCourses(int id);
+        User GetSenderFromMessage(int messageId);
     }
 }

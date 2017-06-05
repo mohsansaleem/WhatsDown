@@ -1,4 +1,44 @@
-﻿@{
+﻿@model IEnumerable<WhatsDown.Models.ConversationNode>
+
+@{
     ViewBag.Title = "Home Page";
 }
 
+@if (Request.IsAuthenticated)
+{
+    <div style="height: 800px; ">
+        <table class="grid">
+            <tr>
+                <th>Conversations</th>
+            </tr>
+            <div style="height: 600px; overflow: auto;">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="left">
+                            @item.Title
+                        </td>
+                    </tr>
+
+                }
+                </div>
+        </table>
+    </div>
+}
+else
+{
+
+    <div style="height: 200px; margin-left: auto; margin-right: auto; margin-top: auto; margin-bottom: auto; text-align: center;">
+        <div class="center">
+            <div>
+                Wellcome to the WhatsDown. <br /><br />
+
+                @Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })
+                or
+                @Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
+                to start.
+            </div>
+        </div>
+    </div>
+    
+}

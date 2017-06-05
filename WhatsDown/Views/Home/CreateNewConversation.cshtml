@@ -1,0 +1,51 @@
+﻿@model WhatsDown.Models.SelectUsersModel
+
+@{
+    ViewBag.Title = "WhatsDown";
+}
+
+@using (Html.BeginForm(@Model))
+{
+    <div>
+        <div style="color: coral">
+            <h3 align="center">Create New Conversation</h3>
+        </div>
+        <div align="center" style="width: 100%">
+            <form>
+                <br/>
+                <span class="label label-default">Select Users</span>
+            
+                @Html.ListBoxFor(m => m.SelectedIds, Model.Users, new
+                {
+                    @name = "Users List",
+                    @required = true,
+                    @size = 1,
+                    @class = "multi-user-select-list",
+                    @id = "multi-user-select-list",
+                    @multiple = true
+                })
+
+                <br/><br/>
+
+                <span class="label label-default">Title</span>
+                @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+
+                <br/><br/>
+
+                <button type="submit" class="btn btn-primary">Create New Conversation</button>
+            </form>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#multi-user-select-list").select2({
+            placeholder: "Please Select the Users",
+            maximumSelectionSize: 10,
+            width: 200
+        });
+    });
+
+</script>
+

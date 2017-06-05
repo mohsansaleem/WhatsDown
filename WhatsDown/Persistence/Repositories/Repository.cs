@@ -68,5 +68,11 @@ namespace WhatsDown.Persistence.Repositories
         {
             Context.Set<TEntity>().RemoveRange(entities);
         }
+
+        public int SaveChanges()
+        {
+            bool hasChanges = Context.ChangeTracker.HasChanges();
+            return Context.SaveChanges();
+        }
     }
 }

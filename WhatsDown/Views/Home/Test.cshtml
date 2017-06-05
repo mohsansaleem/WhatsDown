@@ -1,0 +1,59 @@
+﻿@*@model WhatsDown.Core.Domain.MyViewModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width"/>
+    <title>Test</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    
+
+    
+    </head>
+<body>
+    <script src="~/Scripts/jquery-1.12.4.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+    <script src="~/Scripts/select2.js"></script>
+<div style="font-family: Arial; width: 100%">
+    <h2>Index</h2>
+    <br/>
+    <div style="width: 100%">
+       
+        @Html.ListBoxFor(m => m.SelectedIds, Model.Items, new
+   {
+       @name="Users List",
+       @required=true,
+       @size = 1,
+       @class="js-example-basic-multiple",
+       @multiple="multiple"
+        })
+    </div>
+
+    <br/>
+    <br/>
+    <input type="submit" value="Submit"/>
+
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#items").select2({
+            placeholder: "Please Select Courses",
+            maximumSelectionSize: 10,
+            width: 200
+
+        });
+    });
+
+</script>
+    <script type="text/javascript">
+$(".js-example-basic-multiple").select2();
+    </script>
+</body>
+</html>*@
+

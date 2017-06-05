@@ -8,19 +8,27 @@ namespace WhatsDown.Core.Domain
 {
     public class Message
     {
+        public Message()
+        {
+            SendTime = DateTime.Now;
+            MessageTitle = "";
+        }
+
         [Key]
         public int Id
         {
             get; set;
         }
-        //public int ConversationId
-        //{
-        //    get; set;
-        //}
-        //public int SenderId
-        //{
-        //    get; set;
-        //}
+
+        public int ConversationId
+        {
+            get; set;
+        }
+
+        public string UserId
+        {
+            get; set;
+        }
 
         public string MessageTitle
         {
