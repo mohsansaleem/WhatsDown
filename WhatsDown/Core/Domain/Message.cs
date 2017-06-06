@@ -10,8 +10,10 @@ namespace WhatsDown.Core.Domain
     {
         public Message()
         {
-            SendTime = DateTime.Now;
+            SendTime = DateTime.UtcNow;
             MessageTitle = "";
+            MessageBody = "";
+
         }
 
         [Key]

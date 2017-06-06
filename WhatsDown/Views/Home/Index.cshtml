@@ -1,12 +1,415 @@
-﻿@model IEnumerable<WhatsDown.Models.ConversationNode>
+﻿@model WhatsDown.Models.MainViewModel
 
 @{
     ViewBag.Title = "Home Page";
 }
 
+
 @if (Request.IsAuthenticated)
 {
-    <div style="height: 800px; ">
+    <table width="100%" height="100%" border="1">
+        <tbody>
+        <tr>
+            <th width="20%" height="100%" scope="col" valign="top" bgcolor="#6B6767">
+                <div align="center">
+                    <form>
+                        <h2>
+                            <span class="label label-default">Conversations</span>
+                            <button type="button" class="btn btn-primary" onclick="location.href = '@Url.Action("CreateNewConversation", "Home")' ">+</button>
+                            @*<button type="button" class="btn btn-primary" onclick=" location.href='@Url.Action("CreateNewConversation", "Home",new {Id= 1})' ">+</button>*@
+                        </h2>
+                    </form>
+                </div>
+                <div style="overflow-y: scroll; height: inherit; background-color: gray">
+                    <div id="conversation-list-group" class="list-group">
+                        @{
+                            var conversations = Model.Conversations;
+
+                            foreach (var conversationNode in conversations)
+                            {
+                                string bordercolor = @Model.SelectedConversationId.Equals(conversationNode.ConversationId) ? "black" : "white";
+                                string thickness = @Model.SelectedConversationId.Equals(conversationNode.ConversationId) ? "thick" : "thin";
+                                <a id="conversation-node-@conversationNode.ConversationId" href="#" class="conversation-node">
+                                    <div class="list-group-item" style="border-color: @bordercolor; border-width: @thickness;">
+                                        <span id="conversation-node-unread-count-@conversationNode.ConversationId" class="badge">@conversationNode.UnrealMessagesCount</span>
+
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <h2 id="conversation-node-title-@conversationNode.ConversationId" class="panel-title">@conversationNode.Title</h2>
+                                            </div>
+                                            <div id="conversation-node-body-@conversationNode.ConversationId" class="panel-body">@conversationNode.ConversationInitialText</div>
+                                            <div id="conversation-node-lastUpdate-@conversationNode.ConversationId" class="panel-footer" align="right">@conversationNode.LastMessageTime.ToLocalTime().ToShortTimeString()</div>
+                                        </div>
+                                    </div>
+                                </a>
+
+
+                            }
+                        }
+                    </div>
+                </div>
+            </th>
+            <th width="60%" scope="col" valign="top">
+                <div>
+                    <div class="list-group-item" style="vertical-align: text-top">
+                        <span class="label label-default">Enter Message Here.</span>
+                        <div>
+                            <div class="input-group" align="center">
+                                <input type="text" class="form-control" placeholder="placeholder content" aria-describedby="contentaddon1" id="message-text-to-send">
+                                <span id="contentaddon1" class="input-group-addon">
+                                        <button type="button" class="btn btn-sm btn-default" id="message-send-button">Send</button>
+                                    </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  id="messages-list-group" class="list-group" style="overflow-y: scroll; height: 800px">
+                        @{
+                            var messages = Model.SelectConversationMessages.OrderByDescending(msg=>msg.MessageSentTime);
+
+                            foreach (var msg in messages)
+                            {
+                                <div id="message-node-@msg.MessageId" class="panel panel-default" align=@(msg.SenderName.Equals(Model.CurrentUserName) ? "right" : "left")>
+                                    <div class="panel-heading">
+                                        <h3 id="message-node-sender-@msg.MessageId" class="panel-title">@msg.SenderName</h3>
+                                    </div>
+                                    <div id="message-node-message-body-@msg.MessageId" class="panel-body">
+                                        @msg.MessageBody
+                                    </div>
+                                    <div class="panel-footer">
+                                        <span id="message-node-sent-time-@msg.MessageId" class="label label-default">@msg.MessageSentTime.ToLocalTime().ToLongTimeString()</span>
+                                    </div>
+                                </div>
+                            }
+                        }
+
+
+                    </div>
+
+
+                </div>
+            </th>
+
+            <th width="20%" height="1315" scope="col" valign="top" bgcolor="#6B6767">
+
+                <form>
+                    <h2 align="center">
+                        <span class="label label-default">Notifications</span>
+                        <button type="button" class="btn btn-primary" onClick="">Clear</button>
+                    </h2>
+                </form>
+
+                <div style="overflow-y: scroll; height: inherit; direction: rtl">
+                    <div id="notification-list-group" class="list-group-item" style="background-color: gray">
+                        @* *************************
+                        |  Notifications will appear here.
+                        ************************** *@
+                    </div>
+                </div>
+
+            </th>
+
+        </tr>
+        </tbody>
+    </table>
+
+                            //*********************************************
+                            // Hidden Node. For JQuery Clone purpose.
+                            //*********************************************
+
+                            // Conversation Node
+    <a id="conversation-node-tmp" href="#" class="conversation-node" hidden>
+        <div class="list-group-item">
+            <span id="conversation-node-unread-count-tmp" class="badge">Count</span>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2 id="conversation-node-title-tmp" class="panel-title">Title</h2>
+                </div>
+                <div id="conversation-node-body-tmp" class="panel-body">Starting Text</div>
+                <div id="conversation-node-lastUpdate-tmp" class="panel-footer" align="right">Last Message Time</div>
+            </div>
+        </div>
+    </a>
+
+                            // Message Node
+    <div id="message-node-tmp" class="panel panel-default" align="left" hidden>
+        <div class="panel-heading">
+            <h3 id="message-node-sender-tmp" class="panel-title"></h3>
+        </div>
+        <div id="message-node-message-body-tmp" class="panel-body">
+        </div>
+        <div class="panel-footer">
+            <span id="message-node-sent-time-tmp" class="label label-default"></span>
+        </div>
+    </div>
+
+    // Notification Node.
+    <a id="notification-node-tmp" href="#" class="notification-node">
+        <div id="conversation-id-tmp" hidden></div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 id="notification-title-tmp" class="panel-title">Name </h2>
+            </div>
+            <div id="notification-body-tmp" class="panel-body"> This is the body of the text sent blaa blaa ghgjghjghjjhgjghjgjhgj </div>
+            <div align="right">
+                <span id="notification-time-tmp" class="badge">100</span>
+            </div>
+        </div>
+    </a>
+
+    // Model.CurrentUserName
+    @Html.Hidden("SelectedConversationId", Model.SelectedConversationId);
+    @Html.Hidden("CurrentUserName", Model.CurrentUserName);
+
+    //**********************************************
+
+} else
+{
+    <div style="height: 200px; margin-left: auto; margin-right: auto; margin-top: auto; margin-bottom: auto; text-align: center;">
+        <div class="center">
+            <div>
+                Wellcome to the WhatsDown. <br/><br/>
+
+                @Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new
+                {
+                    id = "registerLink"
+                })
+                or
+                @Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new
+                {
+                    id = "loginLink"
+                })
+                to start.
+            </div>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    // On Conversation Node Clicked.
+    $(document).on("click", ".conversation-node", function () {
+
+        var thisId = $(this).attr("id");
+        var conversationId = thisId.replace("conversation-node-", "");
+        var old = document.getElementById('SelectedConversationId');
+        var curUserName = document.getElementById('CurrentUserName').value;
+
+        $.ajax({
+            type: "POST",
+            url: "/Home/LoadMessagesForConversation",
+            data: '{conversationId: "' + conversationId+'" }',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+
+                var child1 = document.getElementById(thisId).children[0];
+
+                $(child1).css('border-color', 'black');
+                $(child1).css('border-width', 'thick');
+
+                if (old.value != conversationId) {
+                    child1 = document.getElementById('conversation-node-' + old.value).children[0];
+
+                    $(child1).css('border-color', 'white');
+                    $(child1).css('border-width', 'thin');
+                }
+
+                old.value = conversationId;
+
+                var groupParent = document.getElementById('messages-list-group');
+                $(groupParent).empty();
+
+                $.each(response, function (index) {
+
+                    var div = document.getElementById('message-node-tmp');
+                    clone = div.cloneNode(true); // true means clone all childNodes and all event handlers
+
+                    var senderdiv = clone.children[0].children[0];
+                    var bodydiv = clone.children[1];
+                    var timediv = clone.children[2].children[0];
+
+                    // gElemRunners.eq(0).html()
+
+                    clone.id = "message-node-" + response[index].MessageId;
+                    senderdiv.id = "message-node-sender-" + response[index].MessageId;
+                    bodydiv.id = "message-node-message-body-" + response[index].MessageId;
+                    timediv.id = "message-node-sent-time-" + response[index].MessageId;
+
+                    if (curUserName == response[index].SenderName) {
+                        $(clone).attr('align', 'right');
+                    }
+
+                    $(senderdiv).html(response[index].SenderName);
+                    $(bodydiv).html(response[index].MessageBody);
+                    $(timediv).html(response[index].MessageSentTimeString);
+
+                    groupParent.prepend(clone);
+
+                    clone.removeAttribute("hidden");
+                });
+
+                $.each(response, function () {
+
+                    //$.each(this, function (k, v) {
+                    //    /// do stuff
+                    //});
+                });
+
+                //alert("Hello: " + response.Name + " .\nCurrent Date and Time: " + response.DateTime);
+            },
+            failure: function (response) {
+                alert(response.responseText);
+            },
+            error: function (response) {
+                alert(response.responseText);
+            }
+        });
+    });
+
+
+    // On Send Botton Clicked.
+    $(document).on("click", "#message-send-button", function () {
+
+        var msgTxtBox = document.getElementById('message-text-to-send');
+        var conversationId = document.getElementById('SelectedConversationId').value;
+        
+        function makeRequest(){
+            $.ajax({
+                type: "POST",
+                url: "/Home/MessagesFromUser",
+                data: '{conversationId: "' + conversationId + '", messageText: "' + msgTxtBox.value + '" }',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    
+                    msgTxtBox.value = "";
+
+                    //var child1 = document.getElementById(thisId).children[0];
+
+                    //$(child1).css('border-color', 'black');
+                    //$(child1).css('border-width', 'thick');
+
+                    //if (old.value != conversationId) {
+                    //    child1 = document.getElementById('conversation-node-' + old.value).children[0];
+
+                    //    $(child1).css('border-color', 'white');
+                    //    $(child1).css('border-width', 'thin');
+                    //}
+
+                    //old.value = conversationId;
+
+                    //var groupParent = document.getElementById('messages-list-group');
+                    //$(groupParent).empty();
+
+                    //$.each(response, function (index) {
+
+                    //    var div = document.getElementById('message-node-tmp');
+                    //    clone = div.cloneNode(true); // true means clone all childNodes and all event handlers
+
+                    //    var senderdiv = clone.children[0].children[0];
+                    //    var bodydiv = clone.children[1];
+                    //    var timediv = clone.children[2].children[0];
+
+                    //    // gElemRunners.eq(0).html()
+
+                    //    clone.id = "message-node-" + response[index].MessageId;
+                    //    senderdiv.id = "message-node-sender-" + response[index].MessageId;
+                    //    bodydiv.id = "message-node-message-body-" + response[index].MessageId;
+                    //    timediv.id = "message-node-sent-time-" + response[index].MessageId;
+
+                    //    $(senderdiv).html(response[index].SenderName);
+                    //    $(bodydiv).html(response[index].MessageBody);
+                    //    $(timediv).html(response[index].MessageSentTimeString);
+
+                    //    groupParent.prepend(clone);
+
+                    //    clone.removeAttribute("hidden");
+                    //});
+
+                    //$.each(response, function () {
+
+                    //    //$.each(this, function (k, v) {
+                    //    //    /// do stuff
+                    //    //});
+                    //});
+
+                    //alert("Hello: " + response.Name + " .\nCurrent Date and Time: " + response.DateTime);
+                },
+                failure: function (response) {
+                    alert(response.responseText);
+                },
+                error: function (response) {
+                    alert(response.responseText);
+                }
+            });
+        }
+
+        alert(conversationId);
+        if (conversationId != -1) {
+            makeRequest();
+        }
+            
+    });
+</script>
+
+
+@*
+// *******************************
+// Hub Proxy
+// ********************************@
+<script type="text/javascript">
+
+        $(function () {
+            // Initialize the connection to the server
+            var messageHub = $.connection.messageHub;
+
+            // Preparing a client side function called sendMessage that will be called from the server side
+            messageHub.client.sendMessage = function (message) {
+                // **************
+                // CallBacks
+                // **************
+                alert(message);
+            };
+
+            // Establish the connection to the server. When done, sets the click of the button
+            $.connection.hub.start().done(function () {
+                $('#message-send-button').click(function () {
+                    // *******************************
+                    // Call Server Functions. Adding Events
+                    //messageHub.server.FunctionName
+                    // *******************************
+                });
+            });
+        });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@if (Request.IsAuthenticated)
+{
+    @*<div style="height: 800px;">
         <table class="grid">
             <tr>
                 <th>Conversations</th>
@@ -21,24 +424,82 @@
                     </tr>
 
                 }
-                </div>
-        </table>
-    </div>
-}
-else
-{
-
-    <div style="height: 200px; margin-left: auto; margin-right: auto; margin-top: auto; margin-bottom: auto; text-align: center;">
-        <div class="center">
-            <div>
-                Wellcome to the WhatsDown. <br /><br />
-
-                @Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })
-                or
-                @Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
-                to start.
             </div>
-        </div>
+        </table>
+    </div>*@
+
+    // ***********************************
+    //  $("#other").click(function() {
+    //$("#target").click();
+    //  });
+
+
+    // *************************************************************
+    // JQuery send and receive using post
+    // *************************************************************
+    @*
+    <input type="text" id="txtName" />
+    <input type="button" id="btnGet" value="Get Current Time" />
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#btnGet").click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/AjaxMethod",
+                    data: '{name: "' + $("#txtName").val() + '" }',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (response) {
+                        alert("Hello: " + response);
+                        //alert("Hello: " + response.Name + " .\nCurrent Date and Time: " + response.DateTime);
+                    },
+                    failure: function (response) {
+                        alert(response.responseText);
+                    },
+                    error: function (response) {
+                        alert(response.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+    *@
+    // ***********************************************************
+
+
+
+    // *************************************************************
+    // Hub Testing send and receive working.
+    // *************************************************************
+   @* <div style="margin-top: 100px;">
+        <!-- This button will trigger the time consuming operation -->
+        <input type="button" id="mybutton" value="Call a time consuming server side operation" />
     </div>
-    
+    <script type="text/javascript">
+
+        $(function () {
+            // Initialize the connection to the server
+            var messageHub = $.connection.messageHub;
+
+            // Preparing a client side function called sendMessage that will be called from the server side
+            messageHub.client.sendMessage = function (message) {
+                // **************
+                // CallBacks
+                // **************
+            };
+
+            // Establish the connection to the server. When done, sets the click of the button
+            $.connection.hub.start().done(function () {
+                $('#mybutton').click(function () {
+                    // *******************************
+                    // Call Server Functions. Adding Events
+                    //messageHub.server.FunctionName
+                    // *******************************
+                });
+            });
+        });
+    </script>*@
+    // *************************************************************
+
 }

@@ -10,8 +10,8 @@ namespace WhatsDown.Core.Domain
     {
         public UserConversationStatus()
         {
-            LastActiveOnThread = DateTime.Now;
-            LastDelivered = DateTime.Now;
+            LastActiveOnThread = DateTime.UtcNow;
+            LastDelivered = DateTime.UtcNow;
         }
 
         [Key]

@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.WebPages;
+using WebGrease.Css.Extensions;
 using WhatsDown.Core;
 using WhatsDown.Core.Domain;
 using WhatsDown.Core.Repositories;
@@ -30,6 +32,30 @@ namespace WhatsDown.Persistence
 
         public IUserConversationStatusRepository UsersConversationsStatus { get; private set; }
 
+        public Message CreateNewMessage(User sender, int conversationId, string message)
+        {
+            Message msg = new Message()
+            {
+                ConversationId = conversationId,
+                MessageBody = message,
+                UserId = sender.Id,
+                SendTime = DateTime.UtcNow,
+                User = sender,
+                Conversation = Conversations.Find(cnv=> cnv.Id== conversationId).First()
+            };
+
+            Messages.Add(msg);
+
+            Conversations.Find(conv => conv.Id == conversationId).First()
+                .ConversationUsers.First(usr => usr.UserId.Equals(sender.Id))
+                .LastActiveOnThread = DateTime.UtcNow;
+
+            Complete();
+
+            return msg;
+        }
+        
+
         public Conversation CreateNewConversation( User userAdmin, List<User> participantUsers, string title = "", string description = ""   )
         {
             Conversation conversation = new Conversation()
@@ -47,25 +73,38 @@ namespace WhatsDown.Persistence
             {
                 conversation.ConversationUsers.Add(new UserConversationStatus()
                 {
-                    //Conversation = conversation,
-                    //User = usr,
+                    Conversation = conversation,
+                    User = usr,
                     UserId = usr.Id,
                     ConversationId = conversation.Id
                 });
             });
-
+            
             Conversations.Add(conversation);
+            conversation.ConversationUsers.ForEach(cnvUSr => UsersConversationsStatus.Add(cnvUSr));
 
             var val = this.Conversations.SaveChanges();
 
             return conversation;
         }
 
+        public List<MessageNode> GetAllMessageNodesForConversation(int conversationId)
+        {
+            var msgs = Messages.GetAllMessagesForConversation(conversationId).ToList();
+
+            List<MessageNode> messages = msgs.Select(msg => new MessageNode()
+            {
+                MessageBody = msg.MessageBody, MessageSentTime = msg.SendTime, SenderName = Users.Find(usr=> usr.Id.Equals(msg.UserId)).First().FullName
+            }).ToList();
+
+            return messages;
+        }
+
         public List<ConversationNode> GetAllConversationNodesForUser( string userId)
         {
             List<ConversationNode> conversations = new List<ConversationNode>();
 
-            var cnvs = Conversations.GetAllConversationsForUser(userId);
+            var cnvs = Conversations.GetAllConversationsForUser(userId).ToList();
 
             foreach (var cnv in cnvs)
             {
@@ -80,7 +119,7 @@ namespace WhatsDown.Persistence
                 {
                     cnvNode.LastMessageTime = latestMsg.SendTime;
 
-                    if (latestMsg.MessageBody.Length < 15)
+                    if (latestMsg.MessageBody.Length > 15)
                         cnvNode.ConversationInitialText = latestMsg.MessageBody.Substring(0, 15);
                     else
                         cnvNode.ConversationInitialText = latestMsg.MessageBody;
@@ -89,7 +128,9 @@ namespace WhatsDown.Persistence
                 var cnv_usr_status = cnv.ConversationUsers.First(c => c.UserId.Equals(userId));
 
                 cnvNode.UnrealMessagesCount = cnv.Messages.Count(msg => msg.SendTime > cnv_usr_status.LastActiveOnThread);
-                
+
+                cnvNode.ConversationId = cnv.Id;
+
                 conversations.Add(cnvNode);
             }
             return conversations;

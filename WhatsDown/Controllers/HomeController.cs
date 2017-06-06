@@ -5,10 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
 using System.Web.WebPages;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using WhatsDown.Core.Domain;
+using WhatsDown.Hubs;
 using WhatsDown.Persistence;
 using WhatsDown.Models;
 
@@ -43,49 +45,116 @@ namespace WhatsDown.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                List<ConversationNode> Conversations = new List<ConversationNode>();
-
                 var id = User.Identity.GetUserId();
 
-                Conversations = UnitOfWork.GetAllConversationNodesForUser(id);
-                
-                return View(Conversations);
+                MainViewModel viewModel = new MainViewModel()
+                {
+                    Conversations = UnitOfWork.GetAllConversationNodesForUser(id)
+                };
+
+                viewModel.CurrentUserName = UnitOfWork.Users.Find(usr => usr.Id.Equals(id)).First().FullName;
+
+                if (viewModel.Conversations.Count > 0)
+                {
+                    int convId = viewModel.Conversations.First().ConversationId;
+                    viewModel.SelectedConversationId = convId;
+                    viewModel.SelectConversationMessages = UnitOfWork.GetAllMessageNodesForConversation(convId);
+                }
+
+                return View(viewModel);
             }
             
             return View();
         }
 
-        public ActionResult CreateNewConversation()
+        [HttpPost]
+        public ActionResult Index(int selectedConversationId)
         {
-            var id = User.Identity.GetUserId();
-
-            var listSelectListItems = UnitOfWork.Users.GetAll().Where(u => !u.Id.Equals(id)).Select(usr => new SelectListItem()
+            if (User.Identity.IsAuthenticated)
             {
-                Disabled = false,
-                Selected = false,
-                Text = usr.FirstName + " " + usr.LastName,
-                Value = usr.Id
-            }).ToList();
-    
-            SelectUsersModel model = new SelectUsersModel()
-            {
-                SelectedIds = new List<string>(),
-                Title = "",
-                Users = listSelectListItems
-            };
-            
+                var id = User.Identity.GetUserId();
 
-            return View(model);
+                MainViewModel viewModel = new MainViewModel()
+                {
+                    Conversations = UnitOfWork.GetAllConversationNodesForUser(id)
+                };
+
+                viewModel.CurrentUserName = UnitOfWork.Users.Find(usr => usr.Id.Equals(id)).First().FullName;
+
+                if (viewModel.Conversations.Any(cnv => cnv.ConversationId == selectedConversationId))
+                {
+                    viewModel.SelectedConversationId = selectedConversationId;
+                    viewModel.SelectConversationMessages = UnitOfWork.GetAllMessageNodesForConversation(selectedConversationId);
+                }
+
+                return View(viewModel);
+            }
+
+            return View();
         }
 
         [HttpPost]
-        public void CreateNewConversation(SelectUsersModel selectUsers)
+        public JsonResult LoadMessagesForConversation(int conversationId)
         {
-            if (User.Identity.IsAuthenticated && selectUsers != null && selectUsers.SelectedIds.Any())
+            if (!User.Identity.IsAuthenticated)
+                return Json("{Error}");
+                
+            var selectConversationMessages = UnitOfWork.GetAllMessageNodesForConversation(conversationId);
+            
+            return Json(selectConversationMessages);
+        }
+
+        [HttpPost]
+        public JsonResult MessagesFromUser(int conversationId, string messageText)
+        {
+            if (!User.Identity.IsAuthenticated)
+                return Json("{Error}");
+
+            var id = User.Identity.GetUserId();
+            var sender = UnitOfWork.Users.Find(usr => usr.Id.Equals(id)).First();
+            Message message = UnitOfWork.CreateNewMessage(sender, conversationId, messageText);
+            
+            NotificationNode notificationNode = new NotificationNode()
+            {
+                Type = NotificationType.NewMessage,
+                BodyText = message.MessageBody,
+                ConversationId = conversationId,
+                Time = DateTime.Now.ToString("g"),
+                Title = "Message From" + sender.FullName
+            };
+
+            MessageHub.SendNotification(notificationNode);
+
+            return Json(notificationNode);
+        }
+
+        // Testing
+        [HttpPost]
+        public JsonResult AjaxMethod(string name)
+        {
+            //PersonModel person = new PersonModel
+            //{
+            //    Name = name,
+            //    DateTime = DateTime.Now.ToString()
+            //};
+            //return Json(person);
+
+            Console.WriteLine("Name: "+name);
+            name += "back";
+            return Json(name);
+        }
+        
+        public ActionResult CreateNewConversation(SelectUsersModel selectUsers)
+        {
+            if (!User.Identity.IsAuthenticated)
+                return View();
+
+            var id = User.Identity.GetUserId();
+
+            if (selectUsers != null && selectUsers.SelectedIds.Any())
             {
 
-                var id = User.Identity.GetUserId();
-                var userAdmin = UnitOfWork.Users.Find(usr => usr.Id.Equals(id)).FirstOrDefault();
+                var userAdmin = UnitOfWork.Users.Find(usr => usr.Id.Equals(id)).First();
                 List<string> selectedIds = selectUsers.SelectedIds.ToList();
 
                 Conversation conversation = null;
@@ -112,10 +181,29 @@ namespace WhatsDown.Controllers
                 {
                     Debug.WriteLine("User Conversation Already Exist.");
                 }
-                
+
+                return RedirectToAction("Index", new { selectedConversationId = conversation.Id });
                 // Redirect to User Conversation.
                 // conversation
-                return;
+            }
+            else
+            {
+                var listSelectListItems = UnitOfWork.Users.GetAll().Where(u => !u.Id.Equals(id)).Select(usr => new SelectListItem()
+                {
+                    Disabled = false,
+                    Selected = false,
+                    Text = usr.FirstName + " " + usr.LastName,
+                    Value = usr.Id
+                }).ToList();
+
+                SelectUsersModel model = new SelectUsersModel()
+                {
+                    SelectedIds = new List<string>(),
+                    Title = "",
+                    Users = listSelectListItems
+                };
+
+                return View(model);
             }
         }
 

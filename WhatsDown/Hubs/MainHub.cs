@@ -9,6 +9,7 @@ using WhatsDown.Persistence;
 
 namespace WhatsDown.Hubs
 {
+    [Authorize]
     public class MainHub : Hub
     {
         public static void SendMessage(string msg)

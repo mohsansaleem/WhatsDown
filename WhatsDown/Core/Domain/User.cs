@@ -22,6 +22,11 @@ namespace WhatsDown.Core.Domain
             get; set;
         }
 
+        public string FullName
+        {
+            get { return FirstName + " " + LastName; }
+        }
+
         public User()
         {
             this.ConversationUsers = new HashSet<UserConversationStatus>();

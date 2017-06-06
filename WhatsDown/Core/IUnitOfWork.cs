@@ -21,8 +21,12 @@ namespace WhatsDown.Core
             get;
         }
 
+        Message CreateNewMessage(User sender, int conversationId, string message);
+
         Conversation CreateNewConversation(User userAdmin, List<User> participantUsers, string title = "",
             string description = "");
+
+        List<MessageNode> GetAllMessageNodesForConversation(int conversationId);
 
         List<ConversationNode> GetAllConversationNodesForUser(string userId);
 

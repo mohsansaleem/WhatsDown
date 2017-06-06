@@ -11,7 +11,7 @@ namespace WhatsDown.Core.Domain
     {
         public Conversation()
         {
-            StartDate = DateTime.Now;
+            StartDate = DateTime.UtcNow;
             this.ConversationUsers = new HashSet<UserConversationStatus>();
             this.Messages = new HashSet<Message>();
         }
