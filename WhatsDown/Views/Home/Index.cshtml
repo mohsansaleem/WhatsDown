@@ -23,7 +23,7 @@
                 <div style="overflow-y: scroll; height: inherit; background-color: gray">
                     <div id="conversation-list-group" class="list-group">
                         @{
-                            var conversations = Model.Conversations;
+                            var conversations = Model.Conversations.OrderByDescending(cnv=>cnv.LastMessageTime);
 
                             foreach (var conversationNode in conversations)
                             {
@@ -366,10 +366,50 @@
 
             // Preparing a client side function called sendMessage that will be called from the server side
             messageHub.client.sendMessage = function (message) {
-                // **************
-                // CallBacks
-                // **************
-                alert(message);
+                if (message.Type == 1) {
+                    var curConvId = document.getElementById('SelectedConversationId').value;
+                    var curUserName = document.getElementById('CurrentUserName').value;
+
+                    if (message.ConversationId == curConvId) {
+                        var groupParent = document.getElementById('messages-list-group');
+                        var div = document.getElementById('message-node-tmp');
+                        clone = div.cloneNode(true); // true means clone all childNodes and all event handlers
+
+                        var senderdiv = clone.children[0].children[0];
+                        var bodydiv = clone.children[1];
+                        var timediv = clone.children[2].children[0];
+
+                        //public int ConversationId { get; set; }
+
+                        clone.id = "message-node-" + message.MessageId;
+                        senderdiv.id = "message-node-sender-" + message.MessageId;
+                        bodydiv.id = "message-node-message-body-" + message.MessageId;
+                        timediv.id = "message-node-sent-time-" + message.MessageId;
+
+                        if (curUserName == message.SenderName) {
+                            $(clone).attr('align', 'right');
+                        }
+
+                        $(senderdiv).html(message.SenderName);
+                        $(bodydiv).html(message.BodyText);
+                        $(timediv).html(message.Time);
+
+                        groupParent.prepend(clone);
+                        clone.removeAttribute("hidden");
+                        alert("it is a message");
+                    } else {
+                        alert("New Message. Notification System have no UI yet.");
+                    }
+                    
+                    $("#conversation-node-body-" + message.ConversationId).html(message.BodyText);
+                    $("#conversation-node-lastUpdate-" + message.ConversationId).html(message.Time);
+
+                } else {
+
+
+                    alert("new Conversation created.");
+                }
+
             };
 
             // Establish the connection to the server. When done, sets the click of the button

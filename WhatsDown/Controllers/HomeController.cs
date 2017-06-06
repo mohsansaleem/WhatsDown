@@ -119,8 +119,10 @@ namespace WhatsDown.Controllers
                 Type = NotificationType.NewMessage,
                 BodyText = message.MessageBody,
                 ConversationId = conversationId,
+                MessageId = message.Id,
                 Time = DateTime.Now.ToString("g"),
-                Title = "Message From" + sender.FullName
+                Title = "Message From " + sender.FullName,
+                SenderName = sender.FullName
             };
 
             MessageHub.SendNotification(notificationNode);

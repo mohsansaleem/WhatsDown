@@ -22,6 +22,8 @@ namespace WhatsDown.Models
         public string Time { get; set; }
 
         public int ConversationId { get; set; }
+        public int MessageId { get; set; }
+        public string SenderName { get; set; }
     }
 
     public class MainViewModel

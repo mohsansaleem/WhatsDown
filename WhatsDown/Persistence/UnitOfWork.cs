@@ -133,7 +133,8 @@ namespace WhatsDown.Persistence
 
                 conversations.Add(cnvNode);
             }
-            return conversations;
+            
+            return conversations.OrderByDescending(cnv => cnv.LastMessageTime).ToList();
         }
              
 
