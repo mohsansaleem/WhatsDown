@@ -7,10 +7,10 @@
 
 @if (Request.IsAuthenticated)
 {
-    <table width="100%" height="100%" border="1">
+    <table width="100%" border="1">
         <tbody>
         <tr>
-            <th width="20%" height="100%" scope="col" valign="top" bgcolor="#6B6767">
+            <th width="20%" height="900px" scope="col" valign="top" bgcolor="#6B6767">
                 <div align="center">
                     <form>
                         <h2>
@@ -63,7 +63,7 @@
                         </div>
                     </div>
 
-                    <div  id="messages-list-group" class="list-group" style="overflow-y: scroll; height: 800px">
+                    <div  id="messages-list-group" class="list-group" style="overflow-y: scroll; height: 900px">
                         @{
                             var messages = Model.SelectConversationMessages.OrderByDescending(msg=>msg.MessageSentTime);
 
@@ -90,7 +90,7 @@
                 </div>
             </th>
 
-            <th width="20%" height="1315" scope="col" valign="top" bgcolor="#6B6767">
+            <th width="20%" height="900px" scope="col" valign="top" bgcolor="#6B6767">
 
                 <form>
                     <h2 align="center">
@@ -120,7 +120,7 @@
                             // Conversation Node
     <a id="conversation-node-tmp" href="#" class="conversation-node" hidden>
         <div class="list-group-item">
-            <span id="conversation-node-unread-count-tmp" class="badge">Count</span>
+            <span id="conversation-node-unread-count-tmp" class="badge">0</span>
 
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -145,7 +145,7 @@
     </div>
 
     // Notification Node.
-    <a id="notification-node-tmp" href="#" class="notification-node">
+    <a id="notification-node-tmp" href="#" class="notification-node" hidden>
         <div id="conversation-id-tmp" hidden></div>
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -409,13 +409,13 @@
                     var tmpdiv = document.getElementById('conversation-node-tmp');
                     var cnvClone = tmpdiv.cloneNode(true); // true means clone all childNodes and all event handlers
 
-                    var titlediv = clone.children[0].children[1].children[0].children[0];
-                    bodydiv = clone.children[0].children[1].children[1];
-                    timediv = clone.children[0].children[1].children[2];
+                    var titlediv = cnvClone.children[0].children[1].children[0].children[0];
+                    bodydiv = cnvClone.children[0].children[1].children[1];
+                    timediv = cnvClone.children[0].children[1].children[2];
 
                     //public int ConversationId { get; set; }
 
-                    clone.id = "conversation-node-" + message.ConversationId;
+                    cnvClone.id = "conversation-node-" + message.ConversationId;
                     titlediv.id = "conversation-node-title-" + message.ConversationId;
                     bodydiv.id = "conversation-node-body-" + message.ConversationId;
                     timediv.id = "conversation-node-lastUpdate-" + message.ConversationId;
@@ -424,8 +424,8 @@
                     $(bodydiv).html(message.BodyText);
                     $(timediv).html(message.Time);
 
-                    convParent.prepend(clone);
-                    clone.removeAttribute("hidden");
+                    convParent.prepend(cnvClone);
+                    cnvClone.removeAttribute("hidden");
                 }
 
             };

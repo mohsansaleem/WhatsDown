@@ -46,15 +46,20 @@ namespace WhatsDown.Persistence
 
             Messages.Add(msg);
 
-            Conversations.Find(conv => conv.Id == conversationId).First()
-                .ConversationUsers.First(usr => usr.UserId.Equals(sender.Id))
-                .LastActiveOnThread = DateTime.UtcNow;
+            UpdateLastActiveStatusForUser(sender.Id, conversationId);
 
             Complete();
 
             return msg;
         }
-        
+
+        public void UpdateLastActiveStatusForUser(string userId, int conversationId)
+        {
+            var user = Users.Find(usr => usr.Id.Equals(userId)).First();
+            Conversations.Find(conv => conv.Id == conversationId).First()
+                .ConversationUsers.First(usr => usr.UserId.Equals(user.Id))
+                .LastActiveOnThread = DateTime.UtcNow;
+        }
 
         public Conversation CreateNewConversation( User userAdmin, List<User> participantUsers, string title = "", string description = ""   )
         {
@@ -88,6 +93,13 @@ namespace WhatsDown.Persistence
             return conversation;
         }
 
+        public List<User> GetAllUsersPerConversation(int conversationId)
+        {
+            List<User> users = Conversations.Find(cnv => cnv.Id == conversationId).First().ConversationUsers.Select(cnvusr => cnvusr.User).ToList();
+
+            return users;
+        }
+
         public List<MessageNode> GetAllMessageNodesForConversation(int conversationId)
         {
             var msgs = Messages.GetAllMessagesForConversation(conversationId).ToList();
@@ -112,7 +124,9 @@ namespace WhatsDown.Persistence
 
                 if (cnv.Title.IsEmpty())
                     cnvNode.Title = cnv.ConversationUsers.Select(cnvusr => cnvusr.User.FirstName).Aggregate((i, j) => i + ", " + j);
-
+                else
+                    cnvNode.Title = cnv.Title;
+                
                 var latestMsg = cnv.Messages.OrderByDescending(msg => msg.SendTime).FirstOrDefault();
 
                 if (latestMsg != null)
@@ -123,6 +137,10 @@ namespace WhatsDown.Persistence
                         cnvNode.ConversationInitialText = latestMsg.MessageBody.Substring(0, 15);
                     else
                         cnvNode.ConversationInitialText = latestMsg.MessageBody;
+                }
+                else
+                {
+                    cnvNode.LastMessageTime = cnv.StartDate;
                 }
 
                 var cnv_usr_status = cnv.ConversationUsers.First(c => c.UserId.Equals(userId));

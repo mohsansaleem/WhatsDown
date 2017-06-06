@@ -41,34 +41,33 @@ namespace WhatsDown.Controllers
             this.UserManager = new UserManager<User>(new UserStore<User>(dbContext));
         }
 
-        public ActionResult Index()
-        {
-            if (User.Identity.IsAuthenticated)
-            {
-                var id = User.Identity.GetUserId();
+        //public ActionResult Index()
+        //{
+        //    if (User.Identity.IsAuthenticated)
+        //    {
+        //        var id = User.Identity.GetUserId();
 
-                MainViewModel viewModel = new MainViewModel()
-                {
-                    Conversations = UnitOfWork.GetAllConversationNodesForUser(id)
-                };
+        //        MainViewModel viewModel = new MainViewModel()
+        //        {
+        //            Conversations = UnitOfWork.GetAllConversationNodesForUser(id)
+        //        };
 
-                viewModel.CurrentUserName = UnitOfWork.Users.Find(usr => usr.Id.Equals(id)).First().FullName;
+        //        viewModel.CurrentUserName = UnitOfWork.Users.Find(usr => usr.Id.Equals(id)).First().FullName;
 
-                if (viewModel.Conversations.Count > 0)
-                {
-                    int convId = viewModel.Conversations.First().ConversationId;
-                    viewModel.SelectedConversationId = convId;
-                    viewModel.SelectConversationMessages = UnitOfWork.GetAllMessageNodesForConversation(convId);
-                }
+        //        if (viewModel.Conversations.Count > 0)
+        //        {
+        //            int convId = viewModel.Conversations.First().ConversationId;
+        //            viewModel.SelectedConversationId = convId;
+        //            viewModel.SelectConversationMessages = UnitOfWork.GetAllMessageNodesForConversation(convId);
+        //        }
 
-                return View(viewModel);
-            }
+        //        return View(viewModel);
+        //    }
             
-            return View();
-        }
-
-        [HttpPost]
-        public ActionResult Index(int selectedConversationId)
+        //    return View();
+        //}
+        
+        public ActionResult Index(int selectedConversationId = -1)
         {
             if (User.Identity.IsAuthenticated)
             {
@@ -85,6 +84,11 @@ namespace WhatsDown.Controllers
                 {
                     viewModel.SelectedConversationId = selectedConversationId;
                     viewModel.SelectConversationMessages = UnitOfWork.GetAllMessageNodesForConversation(selectedConversationId);
+                }else if (viewModel.Conversations.Count > 0)
+                {
+                    int convId = viewModel.Conversations.First().ConversationId;
+                    viewModel.SelectedConversationId = convId;
+                    viewModel.SelectConversationMessages = UnitOfWork.GetAllMessageNodesForConversation(convId);
                 }
 
                 return View(viewModel);
@@ -100,7 +104,10 @@ namespace WhatsDown.Controllers
                 return Json("{Error}");
                 
             var selectConversationMessages = UnitOfWork.GetAllMessageNodesForConversation(conversationId);
+
+            var id = User.Identity.GetUserId();
             
+
             return Json(selectConversationMessages);
         }
 
@@ -125,7 +132,7 @@ namespace WhatsDown.Controllers
                 SenderName = sender.FullName
             };
 
-            MessageHub.SendNotification(notificationNode);
+            MessageHub.SendNotification(notificationNode, UnitOfWork.GetAllUsersPerConversation(conversationId).Select(usr=> usr.Id).ToList());
 
             return Json(notificationNode);
         }
@@ -163,10 +170,12 @@ namespace WhatsDown.Controllers
                 // Dealing with Single Person Conversation
                 if (selectUsers.SelectedIds.Count() == 1)
                 {
-                    var otherUser = UnitOfWork.Users.GetAll().FirstOrDefault(usr => usr.Id.Equals(selectedIds[0]));
-                    var prevThread = UnitOfWork.Conversations.GetAll().FirstOrDefault(conv => conv.ConversationUsers.Count(convusr => convusr.User.Equals(userAdmin) || convusr.User.Equals(otherUser)) == 2);
+                    var otherUser = UnitOfWork.Users.GetAll().First(usr => usr.Id.Equals(selectedIds[0]));
 
-                    conversation = prevThread;
+
+
+                    var myConvs = UnitOfWork.Conversations.Find(cnv => cnv.ConversationUsers.Any(cu => cu.UserId.Equals(userAdmin.Id))).ToList();
+                    conversation = UnitOfWork.Conversations.Find(cnv => cnv.ConversationUsers.Any(cu => cu.UserId.Equals(otherUser.Id))).FirstOrDefault(u => u.ConversationUsers.Count == 2);
                 }
 
                 if (conversation == null)
@@ -178,6 +187,14 @@ namespace WhatsDown.Controllers
                     usersInConv.Add(userAdmin);
 
                     conversation = UnitOfWork.CreateNewConversation(userAdmin, usersInConv,selectUsers.Title);
+
+                    MessageHub.SendNotification(new NotificationNode()
+                    {
+                        ConversationId = conversation.Id,
+                        SenderName = userAdmin.FullName,
+                        Time = conversation.StartDate.ToString("G"),
+                        Title = conversation.Title
+                    }, UnitOfWork.GetAllUsersPerConversation(conversation.Id).Select(usr=>usr.Id).ToList());
                 }
                 else
                 {

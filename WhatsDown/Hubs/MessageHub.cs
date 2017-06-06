@@ -29,6 +29,16 @@ namespace WhatsDown.Hubs
             hubContext.Clients.All.sendMessage(notificationNode);
         }
 
+        public static void SendNotification(NotificationNode notificationNode, List<string> userIds )
+        {
+            var hubContext = GlobalHost.ConnectionManager.GetHubContext<MessageHub>();
+
+            foreach (var userId in userIds)
+            {
+                hubContext.Clients.User(userId).sendMessage(notificationNode);
+            }
+        }
+
         public int recordsToBeProcessed = 100;
         
         public void DoLongOperation()
