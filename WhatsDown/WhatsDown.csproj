@@ -35,6 +35,19 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PublishDatabaseSettings>
+      <Objects>
+        <ObjectGroup Name="WhatsDownConnection-Deployment" Order="1">
+          <Destination Path="Data Source=whatsdown-dbserver.database.windows.net%3bInitial Catalog=WhatsDownDB%3bIntegrated Security=False%3bUser ID=ms%3bPassword=TheBrain1%3bConnect Timeout=60%3bEncrypt=False%3bTrustServerCertificate=True%3bApplicationIntent=ReadWrite%3bMultiSubnetFailover=False" />
+          <Object Type="DbFullSql">
+            <PreSource Path="Data Source=%28LocalDb%29\MSSQLLocalDB%3bAttachDbFilename=|DataDirectory|\aspnet-WhatsDown-20170603064703.mdf%3bInitial Catalog=aspnet-WhatsDown-20170603064703%3bIntegrated Security=True" ScriptSchema="True" ScriptData="True" CopyAllFullTextCatalogs="False" DriDefaults="True" />
+            <Source Path="obj\Debug\AutoScripts\WhatsDownConnection-Deployment_SchemaAndData.sql" Transacted="True" />
+          </Object>
+        </ObjectGroup>
+      </Objects>
+    </PublishDatabaseSettings>
+    <IncludeIisSettings>false</IncludeIisSettings>
+    <PublishDatabases>true</PublishDatabases>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -366,6 +379,8 @@
     <Content Include="Scripts\i18n\vi.js" />
     <Content Include="Scripts\i18n\zh-CN.js" />
     <Content Include="Scripts\i18n\zh-TW.js" />
+    <None Include="Properties\PublishProfiles\WhatsDown - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\WhatsDown - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.12.4.intellisense.js" />
     <Content Include="Scripts\jquery-1.12.4.js" />
     <Content Include="Scripts\jquery-1.12.4.min.js" />
