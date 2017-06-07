@@ -187,6 +187,13 @@
 }
 
 <script type="text/javascript">
+    
+    $("#message-text-to-send").keyup(function (event) {
+        if (event.keyCode == 13) {
+            $("#message-send-button").click();
+        }
+    });
+
     // On Conversation Node Clicked.
     $(document).on("click", ".conversation-node", function () {
 
@@ -359,87 +366,87 @@
 // ********************************@
 <script type="text/javascript">
 
-        $(function () {
-            // Initialize the connection to the server
-            var messageHub = $.connection.messageHub;
+    $(function () {
+        // Initialize the connection to the server
+        var messageHub = $.connection.messageHub;
 
-            // Preparing a client side function called sendMessage that will be called from the server side
-            messageHub.client.sendMessage = function (message) {
-                var convParent = document.getElementById('conversation-list-group');
-                if (message.Type == 1) {
-                    var curConvId = document.getElementById('SelectedConversationId').value;
-                    var curUserName = document.getElementById('CurrentUserName').value;
+        // Preparing a client side function called sendMessage that will be called from the server side
+        messageHub.client.sendMessage = function (message) {
+            var convParent = document.getElementById('conversation-list-group');
+            if (message.Type == 1) {
+                var curConvId = document.getElementById('SelectedConversationId').value;
+                var curUserName = document.getElementById('CurrentUserName').value;
 
-                    if (message.ConversationId == curConvId) {
-                        var groupParent = document.getElementById('messages-list-group');
-                        var div = document.getElementById('message-node-tmp');
-                        clone = div.cloneNode(true); // true means clone all childNodes and all event handlers
+                if (message.ConversationId == curConvId) {
+                    var groupParent = document.getElementById('messages-list-group');
+                    var div = document.getElementById('message-node-tmp');
+                    clone = div.cloneNode(true); // true means clone all childNodes and all event handlers
 
-                        var senderdiv = clone.children[0].children[0];
-                        var bodydiv = clone.children[1];
-                        var timediv = clone.children[2].children[0];
-
-                        //public int ConversationId { get; set; }
-
-                        clone.id = "message-node-" + message.MessageId;
-                        senderdiv.id = "message-node-sender-" + message.MessageId;
-                        bodydiv.id = "message-node-message-body-" + message.MessageId;
-                        timediv.id = "message-node-sent-time-" + message.MessageId;
-
-                        if (curUserName == message.SenderName) {
-                            $(clone).attr('align', 'right');
-                        }
-
-                        $(senderdiv).html(message.SenderName);
-                        $(bodydiv).html(message.BodyText);
-                        $(timediv).html(message.Time);
-
-                        groupParent.prepend(clone);
-                        clone.removeAttribute("hidden");
-                    } else {
-                        alert("New Message. Notification System have no UI yet.");
-                    }
-                    
-                    $("#conversation-node-body-" + message.ConversationId).html(message.BodyText);
-                    $("#conversation-node-lastUpdate-" + message.ConversationId).html(message.Time);
-                    var tmp = document.getElementById('conversation-node-'+message.ConversationId);
-                    
-                    $(convParent).prepend($('#conversation-node-' + message.ConversationId));
-                } else {
-                    var tmpdiv = document.getElementById('conversation-node-tmp');
-                    var cnvClone = tmpdiv.cloneNode(true); // true means clone all childNodes and all event handlers
-
-                    var titlediv = cnvClone.children[0].children[1].children[0].children[0];
-                    bodydiv = cnvClone.children[0].children[1].children[1];
-                    timediv = cnvClone.children[0].children[1].children[2];
+                    var senderdiv = clone.children[0].children[0];
+                    var bodydiv = clone.children[1];
+                    var timediv = clone.children[2].children[0];
 
                     //public int ConversationId { get; set; }
 
-                    cnvClone.id = "conversation-node-" + message.ConversationId;
-                    titlediv.id = "conversation-node-title-" + message.ConversationId;
-                    bodydiv.id = "conversation-node-body-" + message.ConversationId;
-                    timediv.id = "conversation-node-lastUpdate-" + message.ConversationId;
+                    clone.id = "message-node-" + message.MessageId;
+                    senderdiv.id = "message-node-sender-" + message.MessageId;
+                    bodydiv.id = "message-node-message-body-" + message.MessageId;
+                    timediv.id = "message-node-sent-time-" + message.MessageId;
 
-                    $(titlediv).html(message.Title);
+                    if (curUserName == message.SenderName) {
+                        $(clone).attr('align', 'right');
+                    }
+
+                    $(senderdiv).html(message.SenderName);
                     $(bodydiv).html(message.BodyText);
                     $(timediv).html(message.Time);
 
-                    convParent.prepend(cnvClone);
-                    cnvClone.removeAttribute("hidden");
+                    groupParent.prepend(clone);
+                    clone.removeAttribute("hidden");
+                } else {
+                    alert("New Message. Notification System have no UI yet.");
                 }
+                    
+                $("#conversation-node-body-" + message.ConversationId).html(message.BodyText);
+                $("#conversation-node-lastUpdate-" + message.ConversationId).html(message.Time);
+                var tmp = document.getElementById('conversation-node-'+message.ConversationId);
+                    
+                $(convParent).prepend($('#conversation-node-' + message.ConversationId));
+            } else {
+                var tmpdiv = document.getElementById('conversation-node-tmp');
+                var cnvClone = tmpdiv.cloneNode(true); // true means clone all childNodes and all event handlers
 
-            };
+                var titlediv = cnvClone.children[0].children[1].children[0].children[0];
+                bodydiv = cnvClone.children[0].children[1].children[1];
+                timediv = cnvClone.children[0].children[1].children[2];
 
-            // Establish the connection to the server. When done, sets the click of the button
-            $.connection.hub.start().done(function () {
-                $('#message-send-button').click(function () {
-                    // *******************************
-                    // Call Server Functions. Adding Events
-                    //messageHub.server.FunctionName
-                    // *******************************
-                });
+                //public int ConversationId { get; set; }
+
+                cnvClone.id = "conversation-node-" + message.ConversationId;
+                titlediv.id = "conversation-node-title-" + message.ConversationId;
+                bodydiv.id = "conversation-node-body-" + message.ConversationId;
+                timediv.id = "conversation-node-lastUpdate-" + message.ConversationId;
+
+                $(titlediv).html(message.Title);
+                $(bodydiv).html(message.BodyText);
+                $(timediv).html(message.Time);
+
+                convParent.prepend(cnvClone);
+                cnvClone.removeAttribute("hidden");
+            }
+
+        };
+
+        // Establish the connection to the server. When done, sets the click of the button
+        $.connection.hub.start().done(function () {
+            $('#message-send-button').click(function () {
+                // *******************************
+                // Call Server Functions. Adding Events
+                //messageHub.server.FunctionName
+                // *******************************
             });
         });
+    });
 </script>
 
 
