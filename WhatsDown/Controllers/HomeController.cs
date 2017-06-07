@@ -175,11 +175,12 @@ namespace WhatsDown.Controllers
 
                     try
                     {
-                        var myConvs = UnitOfWork.Conversations.Find(cnv => cnv.ConversationUsers.Any(cu => cu.UserId.Equals(userAdmin.Id)));
-                        var tmp =
-                            myConvs.Where(cnv => cnv.ConversationUsers.Any(cu => cu.UserId.Equals(otherUser.Id)));
-                        if (tmp != null && tmp.Any())
-                            conversation = tmp.FirstOrDefault(u => u.ConversationUsers.Count == 2);
+                        var myConvs = UnitOfWork.Conversations.Find(cnv => cnv.ConversationUsers.Count == 2 && cnv.ConversationUsers.Any(cu => cu.UserId.Equals(userAdmin.Id)));
+                        //var tmp =
+                        //    myConvs.Where(cnv => cnv.ConversationUsers.Any(cu => cu.UserId.Equals(otherUser.Id)));
+                        var conversations = myConvs as IList<Conversation> ?? myConvs.ToList();
+                        if (myConvs != null && conversations.Any())
+                            conversation = conversations.FirstOrDefault(cnv => cnv.ConversationUsers.Any(cu => cu.UserId.Equals(otherUser.Id)));
                     }
                     catch (Exception)
                     {
